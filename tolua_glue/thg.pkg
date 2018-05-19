@@ -1,0 +1,339 @@
+$#include "..\ext.h"
+
+#define CHARA_FACE_FINE				(0)
+#define CHARA_FACE_NORMAL			(1)
+#define CHARA_FACE_HURT				(2)
+
+#define STAGE_OBJ_NO									(0xFFFF)
+#define DEF_STAGE_OBJ_NO								(0xFFFF)	
+#define DEF_STAGE_ID									(0xFF)
+#define DEF_SYSTEM_ID								(0xFE)
+
+
+#define BLT_PROC_TYPE_SCR_CHARA			(0)
+#define BLT_PROC_TYPE_SCR_STAGE			(1)
+#define BLT_PROC_TYPE_SCR_SPELL				(2)
+#define BLT_PROC_TYPE_ITEM						(3)
+
+#define DEF_BLT_TYPE_SPELL						MAX_CHARA_BULLET_TYPE
+#define DEF_BLT_TRG_TYPE_START_INDEX		(MAX_CHARA_BULLET_TYPE+1)
+#define DEF_BLT_TRG_TYPE_REVERSE				(DEF_BLT_TRG_TYPE_START_INDEX)
+#define DEF_BLT_TRG_TYPE_BLIND					(DEF_BLT_TRG_TYPE_REVERSE+1)
+#define DEF_BLT_TRG_TYPE_REPAIR					(DEF_BLT_TRG_TYPE_BLIND+1)
+#define DEF_BLT_TRG_TYPE_TELEPORT				(DEF_BLT_TRG_TYPE_REPAIR+1)
+#define DEF_BLT_TRG_TYPE_DRAIN					(DEF_BLT_TRG_TYPE_TELEPORT+1)
+#define DEF_BLT_TRG_TYPE_FETCH					(DEF_BLT_TRG_TYPE_DRAIN+1)
+#define DEF_BLT_TRG_TYPE_EXCHANGE			(DEF_BLT_TRG_TYPE_FETCH+1)
+#define DEF_BLT_TRG_TYPE_NOANGLE				(DEF_BLT_TRG_TYPE_EXCHANGE+1)
+#define DEF_BLT_TRG_TYPE_NOMOVE				(DEF_BLT_TRG_TYPE_NOANGLE+1)
+
+#define OBJ_TYPE_BLT					(0x80)
+
+#define OBJ_TYPE_SOLID				(0x01)
+#define OBJ_TYPE_GAS					(0x02)
+#define OBJ_TYPE_LIQUID				(0x04)
+#define	OBJ_TYPE_STAGE				(0x08)
+#define OBJ_TYPE_TACTIC			(0x10)
+#define OBJ_TYPE_SLIDE				(0x20)
+
+
+#define OBJ_STATE_MAIN_WAIT_FLG			(0x00000001)
+#define OBJ_STATE_MAIN_ACTIVE_FLG			(0x00000002)
+#define OBJ_STATE_MAIN_DEAD_FLG			(0x00000004)
+#define OBJ_STATE_MAIN_DROP_FLG			(0x00000008)
+#define OBJ_STATE_MAIN_PAUSE_FLG			(0x00000010)
+#define OBJ_STATE_MAIN_SHOTPOWER_FLG	(0x00000020)
+#define OBJ_STATE_MAIN_TRIGGER_BULLET_FLG	(0x00000040)
+#define OBJ_STATE_MAIN_TRIGGER_SPELL_FLG	(0x00000080)
+#define OBJ_STATE_MAIN_SHOOTING_FLG	(0x00000100)
+#define OBJ_STATE_MAIN_SHOT_FLG			(0x00000200)
+#define OBJ_STATE_MAIN_GALLERY_FLG		(0x00000400)
+
+#define DEF_STATE_EMPTY							OBJ_STATE_EMPTY
+#define DEF_STATE_WAIT								OBJ_STATE_MAIN_WAIT_FLG
+#define DEF_STATE_ACTIVE							OBJ_STATE_MAIN_ACTIVE_FLG
+#define DEF_STATE_DEAD								OBJ_STATE_MAIN_DEAD_FLG
+#define DEF_STATE_DROP								OBJ_STATE_MAIN_DROP_FLG
+#define DEF_STATE_SHOTPOWER					OBJ_STATE_MAIN_SHOTPOWER_FLG
+#define DEF_STATE_TRIGGER_BULLET			OBJ_STATE_MAIN_TRIGGER_BULLET_FLG
+#define DEF_STATE_TRIGGER_SPELL				OBJ_STATE_MAIN_TRIGGER_SPELL_FLG
+#define DEF_STATE_SHOT								OBJ_STATE_MAIN_SHOT_FLG
+#define DEF_STATE_GALLERY						OBJ_STATE_MAIN_GALLERY_FLG
+
+#define OBJ_STATE_NONE								(0x08000000)
+#define OBJ_STATE_ROOM								(0x10000000)
+#define OBJ_STATE_LOAD								(0x20000000)
+#define OBJ_STATE_GAME								(0x40000000)
+#define OBJ_STATE_RESULT							(0x80000000)
+
+#define DEF_MAX_SHOT_POWER					(200*10)
+#define FPS													30
+#define MAX_WIND_VALUE							10
+#define MIN_WIND_VALUE							-10
+
+// アイテムフラグ
+#define GAME_ITEM_MOVE_UP			0x00000001		// 移動値増加
+#define GAME_ITEM_DOUBLE_SHOT	0x00000002		// 連射
+#define GAME_ITEM_STEALTH			0x00000004		// ステルス
+#define GAME_ITEM_REVERSE			0x00000008		// 上下反転
+#define GAME_ITEM_BLIND				0x00000010		// 暗転
+#define GAME_ITEM_SHIELD				0x00000020		// シールド
+#define GAME_ITEM_POWER				0x00000040		// パワーアップ
+#define GAME_ITEM_NOANGLE			0x00000080		// 角度変更不可
+#define GAME_ITEM_NOMOVE			0x00000100		// 移動不可
+#define GAME_ITEM_REPAIR				0x00000200		// 回復(小)
+#define GAME_ITEM_REPAIR_BULLET	0x00000400		// 回復弾
+#define GAME_ITEM_TELEPORT			0x00000800		// 移動弾
+#define GAME_ITEM_REPAIR_BIG		0x00001000		// 回復(大幅)
+#define GAME_ITEM_REPAIR_TEAM	0x00002000		// チーム回復
+#define GAME_ITEM_DRAIN				0x00004000		// 吸収弾
+#define GAME_ITEM_FETCH				0x00008000		// 引き寄せ弾
+#define GAME_ITEM_EXCHANGE		0x00010000		// 入れ替え
+#define GAME_ITEM_WIND_CHANGE	0x00020000		// 風向き変更
+#define GAME_ITEM_STEAL				0x00040000		// スティール
+
+// 状態
+#define CHARA_STATE_STEALTH				(0)			// ステルス
+#define CHARA_STATE_BLIND					(1)			// 暗くなる
+#define CHARA_STATE_PAIN						(2)			/// 毒
+#define CHARA_STATE_SHIELD					(3)			/// シールド
+#define CHARA_STATE_POWER					(4)			/// パワーアップ
+#define CHARA_STATE_UPMOVE				(5)			// 移動増加
+#define CHARA_STATE_NOMOVE				(6)			/// 移動不可
+#define CHARA_STATE_NOANGLE				(7)			/// 角度変更不可
+#define CHARA_STATE_DOUBLE					(8)			// 二連発使用中
+#define CHARA_STATE_REVERSE				(9)			/// 逆さ
+#define CHARA_STATE_ITEM_REVERSE		(10)			/// 逆さ弾発射前状態
+#define CHARA_STATE_ITEM_BLIND			(11)			/// 暗くなる弾発射状態
+#define CHARA_STATE_ITEM_REPAIRBLT	(12)			/// 回復する弾発射状態
+#define CHARA_STATE_ITEM_TELEPORT	(13)			/// 着弾点に移動する弾発射状態
+#define CHARA_STATE_ITEM_DRAIN			(14)			/// HP吸収する弾発射状態
+#define CHARA_STATE_ITEM_FETCH			(15)			/// 引き寄せる弾発射状態
+#define CHARA_STATE_ITEM_EXCHANGE	(16)			/// 位置入れ替え弾発射状態
+#define CHARA_STATE_ITEM_NOANGLE		(17)			/// 角度変更不可弾発射状態
+#define CHARA_STATE_ITEM_NOMOVE		(18)			/// 移動不可弾発射状態
+#define CHARA_STATE_ITEM_STEAL			(19)			/// スティール状態
+
+#define LOBBY_W	(608)
+#define LOBBY_WATCHER_SPOT_W	(96)
+#define LOBBY_H (80)
+
+// BYTE DATA
+enum E_TYPE_OBJ_STATE {
+	OBJ_STATE_EMPTY								=	(OBJ_STATE_NONE|0),
+	OBJ_STATE_ROOM_READY						=	(OBJ_STATE_ROOM|0),
+	OBJ_STATE_ROOM_MOVE						=	(OBJ_STATE_ROOM|1),
+	OBJ_STATE_ROOM_READY_OK				=	(OBJ_STATE_ROOM|2),
+
+	OBJ_STATE_LOADING							=	(OBJ_STATE_LOAD|0),
+	OBJ_STATE_LOADCOMPLETE					=	(OBJ_STATE_LOAD|1),
+
+	OBJ_STATE_MAIN_PAUSE						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_PAUSE_FLG),
+	OBJ_STATE_MAIN_WAIT						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_WAIT_FLG),
+	OBJ_STATE_MAIN_ACTIVE						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_ACTIVE_FLG),
+	OBJ_STATE_MAIN_DEAD						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_DEAD_FLG),
+	OBJ_STATE_MAIN_DROP						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_DROP_FLG),
+
+	OBJ_STATE_MAIN_GALLERY					= (OBJ_STATE_GAME|OBJ_STATE_MAIN_GALLERY_FLG),
+	
+	OBJ_STATE_RESULT_CONFIRMING			= (OBJ_STATE_RESULT|0),
+	OBJ_STATE_RESULT_CONFIRMED				= (OBJ_STATE_RESULT|1),
+};
+
+typedef struct connection_info
+{
+	E_TYPE_OBJ_STATE	obj_state;		// 状態
+	unsigned char obj_type;							// PC / BLT / ITEM
+
+	short		vx;		// 移動方向x座標
+	short		vy;		// 移動方向y座標
+
+	short		ax;		// 現在位置x
+	short		ay;		// 現在位置y
+	
+	short		lx;		// ロビーx
+	short		ly;		// ロビーy
+
+	short		angle;	// 体の傾き(360°)
+
+	short	obj_no;			// USER_NO / NPC_NO …
+	unsigned short proc_flg;			// proc flg
+	unsigned short	frame_count;	// Frame
+	unsigned short	turn_count;	// Turn
+	
+	TCHARA_SCR_INFO* scrinfo;
+
+	unsigned long	extdata1;
+	unsigned long	extdata2;
+	DWORD	option[OBJ_OPTION_COUNT];
+	
+	wchar_t	 name[MAX_USER_NAME];	// オブジェクト名
+	unsigned char		name_len;							// 
+
+	int			sock;				// 生成されたソケット番号
+	int	    addr;				// クライアントアドレス
+	int	    sessionkey;	// チャットサーバーでは不使用 - サーバー移動時の秘密キー
+	int 		clientver;		// ゲームバージョン
+	int		port;				// ポート番号（チャットサーバーでは不使用）
+
+	// 部屋情報
+	unsigned long		items[GAME_ITEM_STOCK_MAX_COUNT];	// アイテム番号
+	E_TYPE_USER_DIRECTION	dir;			// 向き
+	unsigned char		master;									// マスター権限=1/ 他=0
+	unsigned char		game_ready;							// ゲーム準備状態 OK=1/NG=0
+	unsigned char		team_no;								// チームNo
+	
+	short		MV_c;	// 移動距離
+	short		MV_m;	// 移動距離MAX
+	short		HP_c;	// HP
+	short		HP_m;	// HP MAX
+	short		delay;	// ディレイ
+	short		EXP_c;	// EXP
+	unsigned short	live_count;
+
+	unsigned char		entity;
+	unsigned char		chara_type;
+	char		chara_state[CHARA_STATE_COUNT];
+	unsigned char		connect_state;		// クライアントの接続状態
+
+} type_session;
+
+
+typedef struct connection_info
+{
+	E_TYPE_OBJ_STATE	obj_state;		// 状態
+	unsigned char		obj_type;							// PC / BLT / ITEM
+
+	short		vx;		// 移動方向x座標
+	short		vy;		// 移動方向y座標
+
+	short		ax;		// 現在位置x
+	short		ay;		// 現在位置y
+
+	short		angle;	// 体の傾き(360°)
+
+	short		obj_no;			// USER_NO / NPC_NO …
+	unsigned short proc_flg;			// proc flg
+	unsigned short	frame_count;	// Frame
+	unsigned short	turn_count;	// Turn
+	TCHARA_SCR_INFO* scrinfo;
+	unsigned long	extdata1;
+	unsigned long	extdata2;
+	DWORD	option[OBJ_OPTION_COUNT];
+	
+	unsigned char proc_type;		// 0：スクリプト/　1：スクリプト使用しない
+	unsigned char hit_range;			// 当たり判定の半径
+	short chr_obj_no;
+	unsigned char chara_type;
+	unsigned char bullet_type;
+	
+	short bx;				// 移動の緩和
+	short by;				// 移動の緩和
+
+	char adx;
+	char ady;
+} type_blt;
+
+typedef struct ground_info{
+	int x;
+	int y;
+	bool ground;
+} type_ground;
+
+
+extern int C_CreateBullet(double proc_type, double chr_obj_no, double chara_type, double blt_type, double obj_type, double posx, double posy, double vecx, double vecy, double addx, double addy, double hit_range, double extdata1, double extdata2);
+extern bool C_Shot(int chr_obj_no, int proc_type, int chr_id, int blt_type, int vec_angle, int power, int frame, int indicator_angle = 0, int indicator_short = 0);
+extern bool C_RemoveBullet(double obj_no, int rm_type);
+extern bool C_IsRemovedObject(int obj_no);
+extern bool C_BombObject(int scr_id, int blt_type, int blt_chr_no, int blt_no, int pos_x, int pos_y,int erase=1);
+extern bool C_DamageCharaHP(int assailant_no, int victim_no, int hp);
+extern bool C_UpdateCharaStatus(int obj_no, int hp, int mv, int delay, int exp);
+extern bool C_UpdateCharaPos(int obj_no, int x,int y);
+
+extern bool C_SetBulletOptionData(int obj_no, int index, int data);
+extern unsigned int C_GetBulletOptionData(int obj_no, int index);
+extern bool C_SetCharaOptionData(int obj_no, int index, int data);
+extern unsigned int C_GetCharaOptionData(int obj_no, int index);
+
+extern bool C_SetBulletExtData1(int obj_no, unsigned long extdata1);
+extern bool C_SetBulletExtData2(int obj_no, unsigned long extdata2);
+extern unsigned int C_GetCharaExtData1(int obj_no);
+extern unsigned int C_GetCharaExtData2(int obj_no);
+extern bool C_SetCharaExtData1(int obj_no, unsigned long extdata1);
+extern bool C_SetCharaExtData2(int obj_no, unsigned long extdata2);
+extern bool C_AddCharaItem(int obj_no, int item);
+extern bool C_SetCharaState(int obj_no, int chr_stt, int val);
+extern int C_GetCharaState(int obj_no, int chr_stt);
+extern unsigned long C_GetCharaItem(int obj_no, int item_index);
+extern bool C_UpdateBulletState(double obj_no, double state);
+extern bool C_UpdateBulletPosition(double obj_no, double px, double py, double vx, double vy, double adx, double ady);
+extern bool C_UpdateBulletVector(double obj_no, double vx, double vy, double adx, double ady);
+
+extern void C_PasteTextureOnStage(int scr_id, int sx,int sy, int tx,int ty,int tw,int th);
+extern int C_GetRand(int min, int max);
+extern int C_GetEntityCharacters();
+extern int C_GetLivingCharacters();
+extern type_session C_GetCharacterAtVector(int index);
+extern type_session C_GetCharacterFromObjNo(int obj_no);
+extern type_blt C_GetBulletInfo(int obj_no);
+extern int C_GetBulletAtkValue(int blt_no);
+extern unsigned int C_GetBulletExtData1(int obj_no);
+extern unsigned int C_GetBulletExtData2(int obj_no);
+extern int C_GetWindValue();
+extern void C_SetWindValue(int wind, int dir);
+extern int C_GetStageWidth();
+extern int C_GetStageHeight();
+extern bool C_UpdateObjectType(int obj_no, int type);
+
+extern bool C_UpdateBulletAngle(double blt_no, double angle);
+extern bool C_SetBulletTextureIndex(double blt_no, double index);
+extern bool C_SetCharaTexture(int chr_no, int left, int top, int right, int bottom);
+
+extern int C_AddEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age);
+extern bool C_RemoveEffect(double effect_no);
+extern bool C_SetEffectVector(double effect_no, double vx, double vy, double ax, double ay);
+extern bool C_SetEffectAlpha(double effect_no, double alpha);
+extern bool C_SetEffectFade(double effect_no, double fade, double effect_time=0);
+extern bool C_SetEffectFadeInOut(double effect_no, double fadeinout);
+extern bool C_SetEffectRotate(double effect_no, double rot);
+extern bool C_SetEffectRotation(double effect_no, double rot, double effect_time=0);
+extern bool C_SetEffectScale(double effect_no, double scalex, double scaley);
+extern bool C_SetEffectScalling(double effect_no, double scalex, double scaley, double effect_time=0);
+extern bool C_SetEffectAnimation(double effect_no, double atime, double acount, bool loop, double effect_time=0);
+extern bool C_SetEffectTexture(int effect_no, double left, double top, double right, double bottom);
+
+extern int C_AddBGEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age);
+extern bool C_RemoveBGEffect(double effect_no);
+extern bool C_SetBGEffectVector(double effect_no, double vx, double vy, double ax, double ay);
+extern bool C_SetBGEffectAlpha(double effect_no, double alpha);
+extern bool C_SetBGEffectFade(double effect_no, double fade, double effect_time=0);
+extern bool C_SetBGEffectFadeInOut(double effect_no, double fadeinout);
+extern bool C_SetBGEffectRotate(double effect_no, double rot);
+extern bool C_SetBGEffectRotation(double effect_no, double rot, double effect_time=0);
+extern bool C_SetBGEffectScale(double effect_no, double scalex, double scaley);
+extern bool C_SetBGEffectScalling(double effect_no, double scalex, double scaley, double effect_time=0);
+extern bool C_SetBGEffectAnimation(double effect_no, double atime, double acount, bool loop, double effect_time=0);
+extern bool C_SetBGEffectTexture(int effect_no, double left, double top, double right, double bottom);
+
+extern void C_SetCameraFocusToBullet(int blt_no);
+extern void C_SetCameraFocusToChara(int obj_no);
+
+extern void C_HideStage();
+extern void C_ShowStage();
+
+extern void C_RegistSoundSE(char* rc_name);
+extern void C_PlaySoundSE(char* rc_name, int loop=0, double fade=0);
+
+extern int C_GetMyCharaNo();
+extern void C_AddMsgLog(char* str);
+extern int C_GetAngle(int x, int y);
+extern int C_GetScrIDFromChrNo(int obj_no);
+extern int C_GetUserTeamNo(int obj_no);
+extern char* C_GetUserName(int obj_no);
+
+extern void C_DbgOutputStr(char* str);
+extern void C_DbgOutputNum(int num);
+extern void C_DbgAddLogNum(int num);
+
+extern type_ground C_GetRandomStagePos();
+extern type_ground C_GetGroundPos(int x, int y);

@@ -1,0 +1,448 @@
+
+require("bit")
+chr_scripts = {}	-- character table
+stg_scripts = {}	-- stage table
+
+-- character load
+function load_CharaScript(num, chrscr)
+	local cs = require(chrscr)
+	local chr = cs.Chara.new(num)
+	if (chr ~= nil) then
+		table.insert(chr_scripts, chr)
+	end
+	return chr == nil
+end
+
+-- stage load
+function load_StageScript(num, stgscr)
+	local cs = require(stgscr)
+	local stg = cs.Stage.new(num)
+	if (stg ~= nil) then
+		table.insert(stg_scripts, stg)
+	end
+	return stg == nil
+end
+function CheckCharaDebug(num,cd)
+	return chr_scripts[num]:CheckDebug(cd)
+end
+-- get character id
+function getChara_ID(num)
+	return chr_scripts[num]:GetID()
+end
+
+-- get character texture (Chr)
+function getChara_TexFile(num)
+	return chr_scripts[num]:GetTexFile()
+end
+
+-- get character draw size (Chr)
+function getChara_DrawSize(num)
+	return chr_scripts[num]:GetDrawSize()
+end
+
+-- get character texture (Chr)
+function getChara_TexChr(num)
+	return chr_scripts[num]:GetTexChr()
+end
+
+-- get character texture (Trg)
+function getChara_TexTrg(num)
+	return chr_scripts[num]:GetTexTrg()
+end
+
+-- get character texture (GUI_Face)
+function getChara_TexFace(num)
+	return chr_scripts[num]:GetTexFace()
+end
+
+-- get character Name
+function getChara_Name(num)
+	return chr_scripts[num]:GetName()
+end
+
+-- get character delay
+function getChara_Delay(num)
+	return chr_scripts[num]:GetDelay()
+end
+
+-- get character Move
+function getChara_Move(num)
+	return chr_scripts[num]:GetMove()
+end
+
+-- get character MAX HP
+function getChara_MaxHP(num)
+	return chr_scripts[num]:GetHP()
+end
+
+-- get character icon
+function getChara_Icon(num)
+	return chr_scripts[num]:GetIcon()
+end
+
+-- get character face
+function getChara_Face(num,type)
+	return chr_scripts[num]:GetFace(type)
+end
+
+function getChara_ResultMessage(num,type)
+	return chr_scripts[num]:GetResultMessage(type)
+end
+
+-- get character se count
+function getChara_SEFilesCount(num)
+	return chr_scripts[num]:GetSEFilesCount()
+end
+-- get character se
+function getChara_SEFile(num,index)
+	return chr_scripts[num]:GetSEFile(index)
+end
+
+-- get character angle range (Chr)
+function getChara_AngleRange(num)
+	return chr_scripts[num]:GetAngleRange()
+end
+
+-- event character trigger frame
+function onTriggerFrame(num,type,px,py,angle,frame)
+	return chr_scripts[num]:OnTriggerFrame(type,px,py,angle,frame)
+end
+
+-- event character turn end
+function onTurnEnd_Chara(num,chr_no,turn,ex1,ex2)
+	chr_scripts[num]:OnTurnEndChara(chr_no,turn,ex1,ex2)
+end
+
+-- event character turn start
+function onTurnStart_Chara(num,chr_no,turn,ex1,ex2)
+	chr_scripts[num]:OnTurnStartChara(chr_no,turn,ex1,ex2)
+end
+
+-- event character draw
+function onDraw_Chara(num,chr_no,state,angle,vx,vy,frame)
+	chr_scripts[num]:OnDrawChara(chr_no,state,angle,vx,vy,frame)
+end
+
+-- on turn start chr
+function onDead_Chara(num,chr_no,type,prv_stt)
+	chr_scripts[num]:OnDeadChara(chr_no,type,prv_stt)
+end
+
+-- on load chr
+function onLoad_Chara(num,chr_no,px,py)
+	chr_scripts[num]:OnLoadChara(chr_no,px,py)
+end
+
+function onChangeHP_Chara(num,chr_no,max_hp,current_hp,new_hp,ex1,ex2)
+	return chr_scripts[num]:OnChangeCharaHP(chr_no,max_hp,current_hp,new_hp,ex1,ex2)
+end
+--blt----------------------------------
+-- get bullet type count
+function getChara_GetBltTypeCount(num)
+	return chr_scripts[num]:GetBltTypeCount()
+end
+
+-- get bullet info
+function getChara_GetBltInfo(num, blt_num)
+	return chr_scripts[num]:GetBltInfo(blt_num)
+end
+
+-- shot bullet
+function shot_CharaBullet(scr_idx,chr_obj_no,blt_type,px,py,vx,vy,vec_angle,power,frame,indicator_angle,indicator_power)
+	return chr_scripts[scr_idx]:ShotBullet(chr_obj_no,blt_type,px,py,vx,vy,vec_angle,power,frame,indicator_angle,indicator_power)
+end
+
+-- shot spell
+function shot_CharaSpell(scr_idx,chr_obj_no,px,py,vx,vy,vec_angle,power,frame,indicator_angle,indicator_power)
+	return chr_scripts[scr_idx]:ShotSpell(chr_obj_no,px,py,vx,vy,vec_angle,power,frame,indicator_angle,indicator_power)
+end
+
+-- on hit stage bullet
+function onHitStage_CharaBullet(scr_idx,blt_type,blt_chr_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return chr_scripts[scr_idx]:OnHitStageBullet(blt_type,blt_chr_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on hit chara bullet
+function onHitChara_CharaBullet(scr_idx,blt_type,blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return chr_scripts[scr_idx]:OnHitCharaBullet(blt_type,blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on hit bullet chr bullet
+function onHitBullet_CharaBullet(scr_idx,blt_type,blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return chr_scripts[scr_idx]:OnHitBulletBullet(blt_type,blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on hit chara bullet bomb
+function onHitChara_CharaBulletBomb(scr_idx,blt_type,hit_chr_no,blt_chr_no,blt_no,hx,hy,power)
+	chr_scripts[scr_idx]:OnHitCharaBulletBomb(blt_type,hit_chr_no,blt_chr_no,blt_no,hx,hy,power)
+end
+
+-- on frame chr bullet
+function onFrame_CharaBullet(scr_idx,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
+	chr_scripts[scr_idx]:OnFrameBullet(blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
+end
+
+-- on get phemeris chr bullet
+function onGetEphemeris_CharaBullet(scr_idx,blt_type,blt_no,frame,px,py,vx,vy,wind,ex1,ex2)
+	return chr_scripts[scr_idx]:OnGetEphemerisBullet(blt_type,blt_no,frame,px,py,vx,vy,wind,ex1,ex2)
+end
+
+-- on draw bullet vec_angle=vx,vy angle state=OBJ_STATE_MAIN_WAIT/OBJ_STATE_MAIN_ACTIVE
+function onDraw_CharaBullet(scr_idx,blt_type,blt_no,state,px,py,vx,vy,vec_angle,frame,ex1,ex2)
+	chr_scripts[scr_idx]:OnDrawBullet(blt_type,blt_no,state,px,py,vx,vy,vec_angle,frame,ex1,ex2)
+end
+
+-- on update object type
+function onUpdateType_CharaBullet(scr_idx,blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,type)
+	chr_scripts[scr_idx]:OnUpdateTypeCharaBullet(blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,type)
+end
+
+-- on update object state
+function onUpdateState_CharaBullet(scr_idx,blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,state)
+	chr_scripts[scr_idx]:OnUpdateStateCharaBullet(blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,state)
+end
+
+-- on change wind
+function onChangeWind_CharaBullet(scr_idx,blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,wind)
+	chr_scripts[scr_idx]:OnChangeWindCharaBullet(blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,wind)
+end
+
+-- on turn start chr bullet
+function onTurnStart_CharaBullet(scr_idx,blt_type,blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+	chr_scripts[scr_idx]:OnTurnStartBullet(blt_type,blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+end
+-- on turn end chr bullet
+function onTurnEnd_CharaBullet(scr_idx,blt_type,blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+	chr_scripts[scr_idx]:OnTurnEndBullet(blt_type,blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+end
+
+function onBomb_CharaBullet(scr_idx,blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,bx,by,pxls)
+	chr_scripts[scr_idx]:OnBombCharaBullet(blt_type,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,bx,by,pxls)
+end
+
+--sc-----------------------------------
+-- get sc info
+function getChara_GetSCBaseInfo(num)
+	return chr_scripts[num]:GetSCBaseInfo()
+end
+
+-- get sc info
+function getChara_GetSCPartInfo(num)
+	return chr_scripts[num]:GetSCPartInfo()
+end
+
+-- on frame spell
+function onFrame_CharaSpell(scr_idx,blt_no,frame,px,py,vx,vy,ex1,ex2)
+	chr_scripts[scr_idx]:OnFrameSpell(blt_no,frame,px,py,vx,vy,ex1,ex2)
+end
+
+-- on get phemeris spell
+function onGetEphemeris_CharaSpell(scr_idx,blt_no,frame,px,py,vx,vy,wind,ex1,ex2)
+	return chr_scripts[scr_idx]:OnGetEphemerisSpell(blt_no,frame,px,py,vx,vy,wind,ex1,ex2)
+end
+
+
+-- on hit chara spell
+function onHitChara_CharaSpell(scr_idx,blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return chr_scripts[scr_idx]:OnHitCharaSpell(blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on hit bullet chr spell
+function onHitBullet_CharaSpell(scr_idx,blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return chr_scripts[scr_idx]:OnHitBulletSpell(blt_chr_no,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on hit stage spell
+function onHitStage_CharaSpell(scr_idx,blt_chr_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return chr_scripts[scr_idx]:OnHitStageSpell(blt_chr_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on update object type
+function onUpdateType_CharaSpell(scr_idx,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,type)
+	chr_scripts[scr_idx]:OnUpdateTypeCharaSpell(blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,type)
+end
+
+-- on update object state
+function onUpdateState_CharaSpell(scr_idx,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,state)
+	chr_scripts[scr_idx]:OnUpdateStateCharaSpell(blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,state)
+end
+
+-- on change wind
+function onChangeWind_CharaSpell(scr_idx,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,wind)
+	chr_scripts[scr_idx]:OnChangeWindCharaSpell(blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,wind)
+end
+
+-- on turn start chr spell
+function onTurnStart_CharaSpell(scr_idx,blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+	chr_scripts[scr_idx]:OnTurnStartSpell(blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+end
+
+-- on turn end chr spell
+function onTurnEnd_CharaSpell(scr_idx,blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+	chr_scripts[scr_idx]:OnTurnEndSpell(blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+end
+
+-- on turn start chr spell
+function onTurnStart_CharaSpell(scr_idx,blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+	chr_scripts[scr_idx]:OnTurnStartSpell(blt_chr_no,blt_no,turn,ex1,ex2,act_obj_no)
+end
+
+function onBomb_CharaSpell(scr_idx,blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,bx,by,pxls)
+	chr_scripts[scr_idx]:OnBombCharaSpell(blt_no,blt_chr_no,px,py,vx,vy,ex1,ex2,bx,by,pxls)
+end
+-- on hit chara bullet bomb
+function onHitChara_CharaSpellBomb(scr_idx,hit_chr_no,blt_chr_no,blt_no,hx,hy,power)
+	chr_scripts[scr_idx]:OnHitCharaSpellBomb(hit_chr_no,blt_chr_no,blt_no,hx,hy,power)
+end
+
+-- on draw bullet vec_angle=vx,vy angle state=OBJ_STATE_MAIN_WAIT/OBJ_STATE_MAIN_ACTIVE
+function onDraw_CharaSpell(scr_idx,blt_no,state,px,py,vx,vy,vec_angle,frame,ex1,ex2)
+	chr_scripts[scr_idx]:OnDrawSpell(blt_no,state,px,py,vx,vy,vec_angle,frame,ex1,ex2)
+end
+
+--stage--------------------------------
+function CheckStageDebug(num,cd)
+	return stg_scripts[num]:CheckDebug(cd)
+end
+-- get stage id
+function getStage_ID(num)
+	return stg_scripts[num]:GetID()
+end
+
+-- get stage name
+function getStage_Name(num)
+	return stg_scripts[num]:GetName()
+end
+
+-- get stage thumnail info
+function getStage_ThumnailInfo(num)
+	return stg_scripts[num]:GetThumnailInfo()
+end
+
+-- get stage stage info
+function getStage_StageInfo(num)
+	return stg_scripts[num]:GetStageInfo()
+end
+
+-- get stage BG info
+function getStage_BGInfo(num)
+	return stg_scripts[num]:GetBGInfo()
+end
+
+-- get bullet type count
+function getStage_GetBltTypeCount(num)
+	return stg_scripts[num]:GetBltTypeCount()
+end
+
+-- get bullet info
+function getStage_GetBltInfo(num, blt_type)
+	return stg_scripts[num]:GetBltInfo(blt_type)
+end
+
+-- get bgm path
+function getStage_GetBGMFile(num)
+	return stg_scripts[num]:GetBGMFile()
+end
+
+-- create bullet event
+--function onCreate_StageBullet(num,blt_no,blt_type,px,py,vx,vy)
+--	return stg_scripts[num]:CreateBullet(blt_no,blt_type,px,py,vx,vy)
+--end
+
+-- on hit stage stg bullet
+function onHitStage_StageBullet(scr_idx,blt_type,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return stg_scripts[scr_idx]:OnHitStageBullet(blt_type,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on hit chara stg bullet
+function onHitChara_StageBullet(scr_idx,blt_type,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return stg_scripts[scr_idx]:OnHitCharaBullet(blt_type,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- on hit bullet stg bullet
+function onHitBullet_StageBullet(scr_idx,blt_type,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+	return stg_scripts[scr_idx]:OnHitBulletBullet(blt_type,hit_obj_no,blt_no,px,py,hx,hy,vx,vy,remain,frame,ex1,ex2)
+end
+
+-- erase stage event
+function onErase_Stage(num,blt_type,chr_obj_no,blt_no,px,py,pixel)
+	stg_scripts[num]:OnEraseStage(blt_type,chr_obj_no,blt_no,px,py,pixel)
+end
+
+-- hit chara stage bullet bomb
+function onHitChara_StageBulletBomb(num,blt_type,hit_chr_no,blt_no,hx,hy,power)
+	stg_scripts[num]:OnHitCharaStageBulletBomb(blt_type,hit_chr_no,blt_no,hx,hy,power)
+end
+
+-- on update object state
+function onUpdateType_StageBullet(scr_idx,blt_type,blt_no,px,py,vx,vy,ex1,ex2,type)
+	stg_scripts[scr_idx]:OnUpdateTypeStageBullet(blt_type,blt_no,px,py,vx,vy,ex1,ex2,type)
+end
+
+-- on update object state
+function onUpdateState_StageBullet(scr_idx,blt_type,blt_no,px,py,vx,vy,ex1,ex2,state)
+	stg_scripts[scr_idx]:OnUpdateStateStageBullet(blt_type,blt_no,px,py,vx,vy,ex1,ex2,state)
+end
+
+-- on wind change
+function onChangeWind_StageBullet(scr_idx,blt_type,blt_no,px,py,vx,vy,ex1,ex2,wind)
+	stg_scripts[scr_idx]:OnChangeWindStageBullet(blt_type,blt_no,px,py,vx,vy,ex1,ex2,wind)
+end
+
+-- on turn end stage
+function onTurnEnd_Stage(scr_idx,turn,act_obj_no,next_obj_no)
+	stg_scripts[scr_idx]:OnTurnEndStage(turn,act_obj_no,next_obj_no)
+end
+
+-- on turn start stage bullet
+function onTurnStart_StageBullet(scr_idx,blt_type,blt_no,turn,ex1,ex2,act_obj_no)
+	stg_scripts[scr_idx]:OnTurnStartBullet(blt_type,blt_no,turn,ex1,ex2,act_obj_no)
+end
+-- on turn end stage bullet
+function onTurnEnd_StageBullet(scr_idx,blt_type,blt_no,turn,ex1,ex2,act_obj_no)
+	stg_scripts[scr_idx]:OnTurnEndBullet(blt_type,blt_no,turn,ex1,ex2,act_obj_no)
+end
+
+-- on frame stg bullet
+function onFrame_StageBullet(scr_idx,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
+	stg_scripts[scr_idx]:OnFrameBullet(blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
+end
+
+-- on get phemeris stg bullet
+function onGetEphemeris_StageBullet(scr_idx,blt_type,blt_no,frame,px,py,vx,vy,wind,ex1,ex2)
+	return stg_scripts[scr_idx]:OnGetEphemerisBullet(blt_type,blt_no,frame,px,py,vx,vy,wind,ex1,ex2)
+end
+
+-- on draw bullet vec_angle=vx,vy angle state=OBJ_STATE_MAIN_WAIT/OBJ_STATE_MAIN_ACTIVE
+function onDraw_StageBullet(scr_idx,blt_type,blt_no,state,px,py,vx,vy,vec_angle,frame,ex1,ex2)
+	stg_scripts[scr_idx]:OnDrawBullet(blt_type,blt_no,state,px,py,vx,vy,vec_angle,frame,ex1,ex2)
+end
+
+function onBomb_StageBullet(scr_idx,blt_type,blt_no,px,py,vx,vy,ex1,ex2,bx,by,pxls)
+	stg_scripts[scr_idx]:OnBombStageBullet(blt_type,blt_no,px,py,vx,vy,ex1,ex2,bx,by,pxls)
+end
+
+-- on load stg
+function onLoad_Stage(scr_idx)
+	stg_scripts[scr_idx]:OnLoadStage()
+end
+
+-- get stage se count
+function getStage_SEFilesCount(num)
+	return stg_scripts[num]:GetSEFilesCount()
+end
+-- get character se
+function getStage_SEFile(num,index)
+	return stg_scripts[num]:GetSEFile(index)
+end
+
+--table--------------------------------
+-- get chara script count
+function get_CharaScriptCount()
+	return table.maxn(chr_scripts)
+end
+
+-- get stage script count
+function get_CharaScriptCount()
+	return table.maxn(stg_scripts)
+end

@@ -1,0 +1,47 @@
+
+// PK_USER_CHAT
+// size			: 2 0
+// header		: 1 2
+// chat_header	: 1 3
+// message_len	: 1 4
+// message		: n 5
+
+
+// PK_USER_ROOMINFO
+// size			: 2 0
+// header		: 1 2
+// roomheader	: 1 3
+// chara_count	: 1 4
+// 
+
+
+// PK_CMD_ROOM_CHARA_SEL
+// size			: 2	0
+// header		: 1	2
+// chara_type	: 1	3
+// footer		: 2	4
+
+// PK_CMD_ROOM_READY
+// size			: 2	0
+// header		: 1	2
+// gameready	: 1	3
+// footer		: 2	4
+
+
+// PK_CMD_ROOM_READY
+// size			: 2	0
+// header		: 1	2
+// master		: 1	3
+// footer		: 2	4
+
+// PK_USER_ROOMINFO_MOVE
+// size			: 2	0
+// header		: 1	2
+// mv_x			: 1	3	(char)
+// mv_y			: 1	4	(char)
+// dir			: 1	5
+// footer		: 2	6
+
+
+
+
