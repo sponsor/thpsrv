@@ -155,6 +155,8 @@ INT PacketMaker::MakePacketData_RoomInfoIn(ptype_session sess,BYTE* msg)
 	datIndex += SetShortData(&msg[datIndex], sess->vy);
 	// 方向
 	datIndex += SetByteData(&msg[datIndex], sess->dir);
+	// COST
+	datIndex += SetShortData(&msg[datIndex], g_nMaxCost);
 
 	// エンドマーカ
 	datIndex += SetEndMarker(&msg[datIndex]);
@@ -228,6 +230,8 @@ INT PacketMaker::MakePacketData_RoomInfoInChara(ptype_session sess, BYTE* msg)
 	datIndex += SetShortData(&msg[datIndex], sess->vy);
 	// 方向
 	datIndex += SetByteData(&msg[datIndex], sess->dir);
+	// COST
+	datIndex += SetShortData(&msg[datIndex], g_nMaxCost);
 
 #ifdef _DEBUG
 	if ( datIndex > MAX_PACKET_SIZE)
@@ -476,7 +480,7 @@ INT PacketMaker::MakePacketData_UserDiconnect(ptype_session sess, BYTE *msg)
 // item_index: アイテムインデックス
 // item_flg		: アイテムフラグ
 // msg			: out パケット
-INT PacketMaker::MakePacketData_RoomInfoItemSelect(int index, DWORD item_flg, BYTE cost, BYTE* msg)
+INT PacketMaker::MakePacketData_RoomInfoItemSelect(int index, DWORD item_flg, WORD cost, BYTE* msg)
 {
 	int		datIndex = 2;
 	if (!msg)
@@ -490,7 +494,7 @@ INT PacketMaker::MakePacketData_RoomInfoItemSelect(int index, DWORD item_flg, BY
 	// アイテムフラグ
 	datIndex += SetDwordData(&msg[datIndex], item_flg );
 	// 残りコスト
-	datIndex += SetByteData(&msg[datIndex], cost );
+	datIndex += SetShortData(&msg[datIndex], cost );
 	// エンドマーカ
 	datIndex += SetEndMarker(&msg[datIndex]);
 	SetWordData(&msg[0], datIndex);

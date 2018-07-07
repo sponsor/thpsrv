@@ -67,7 +67,7 @@ namespace PacketMaker
 	// item_index: アイテムインデックス
 	// item_flg		: アイテムフラグ
 	// msg			: out パケット
-	INT MakePacketData_RoomInfoItemSelect(int index, DWORD item_flg, BYTE cost, BYTE* msg);
+	INT MakePacketData_RoomInfoItemSelect(int index, DWORD item_flg, WORD cost, BYTE* msg);
 
 	// チーム数パケット作成
 	// team_count: チーム数

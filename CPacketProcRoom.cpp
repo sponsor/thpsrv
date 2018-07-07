@@ -31,7 +31,7 @@ BOOL CPacketProcRoom::AddNewUser(ptype_session sess)
 	int sessindex = sess->sess_index;
 	// 入室設定
 	sess->obj_state = OBJ_STATE_ROOM_READY;
-	sess->cost = GAME_ITEM_COST_MAX;
+	sess->cost = g_nMaxCost;
 
 	// マスター権限なし
 	if (!m_pMasterSession)
@@ -123,10 +123,10 @@ BOOL CPacketProcRoom::ReEnter(ptype_session sess)
 				if (c_tblCost[nTableIndex].flg == sess->items[i])
 				{
 					// 手持ちがコストオーバー
-					if ((nTotalCost+c_tblCost[nTableIndex].cost) > GAME_ITEM_COST_MAX)
+					if ((nTotalCost+c_tblCost[nTableIndex].cost) > g_nMaxCost)
 					{
 						sess->items[i] = 0x0;
-						packetSize = PacketMaker::MakePacketData_RoomInfoItemSelect(i, 0, (BYTE)(GAME_ITEM_COST_MAX-nTotalCost), pktdata);
+						packetSize = PacketMaker::MakePacketData_RoomInfoItemSelect(i, 0, (WORD)(g_nMaxCost-nTotalCost), pktdata);
 						if (packetSize)
 							ret = AddPacket(sess, pktdata, packetSize);
 					}
@@ -140,9 +140,9 @@ BOOL CPacketProcRoom::ReEnter(ptype_session sess)
 		}
 	}
 
-	if ((int)sess->cost != (GAME_ITEM_COST_MAX-nTotalCost))
+	if ((int)sess->cost != (g_nMaxCost-nTotalCost))
 	{
-		sess->cost = (BYTE)max(0,(GAME_ITEM_COST_MAX-nTotalCost));
+		sess->cost = (WORD)max(0,(g_nMaxCost-nTotalCost));
 		packetSize = PacketMaker::MakePacketData_RoomInfoItemSelect(0, sess->items[0], sess->cost, pktdata);
 		if (packetSize)
 			ret = AddPacket(sess, pktdata, packetSize);
@@ -734,10 +734,10 @@ BOOL CPacketProcRoom::SetItem(ptype_session sess, BYTE* data)
 				if (c_tblCost[nTableIndex].flg == sess->items[i])
 				{
 					// 手持ちがコストオーバー
-					if ((nTotalCost+c_tblCost[nTableIndex].cost) > GAME_ITEM_COST_MAX)
+					if ((nTotalCost+c_tblCost[nTableIndex].cost) > g_nMaxCost)
 					{
 						sess->items[i] = 0x0;
-						packetSize = PacketMaker::MakePacketData_RoomInfoItemSelect(i, 0, (BYTE)(GAME_ITEM_COST_MAX-nTotalCost), pktdata);
+						packetSize = PacketMaker::MakePacketData_RoomInfoItemSelect(i, 0, (WORD)(g_nMaxCost-nTotalCost), pktdata);
 						if (packetSize)
 							ret = AddPacket(sess, pktdata, packetSize);
 					}
@@ -752,9 +752,9 @@ BOOL CPacketProcRoom::SetItem(ptype_session sess, BYTE* data)
 	}
 
 	// 情報を送り返す
-	if ((int)sess->cost != (GAME_ITEM_COST_MAX-nTotalCost))
+	if ((int)sess->cost != (g_nMaxCost-nTotalCost))
 	{
-		sess->cost = (BYTE)max(0,(GAME_ITEM_COST_MAX-nTotalCost));
+		sess->cost = (WORD)max(0,(g_nMaxCost-nTotalCost));
 		packetSize = PacketMaker::MakePacketData_RoomInfoItemSelect(nItemIndex, dwItemFlg, sess->cost, pktdata);
 		if (packetSize)
 			ret = AddPacket(sess, pktdata, packetSize);

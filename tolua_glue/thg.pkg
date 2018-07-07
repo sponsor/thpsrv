@@ -143,39 +143,41 @@ enum E_TYPE_OBJ_STATE {
 typedef struct connection_info
 {
 	E_TYPE_OBJ_STATE	obj_state;		// 状態
-	unsigned char obj_type;							// PC / BLT / ITEM
-
+	unsigned char		obj_type;							// PC / BLT / ITEM
+	
 	short		vx;		// 移動方向x座標
 	short		vy;		// 移動方向y座標
 
 	short		ax;		// 現在位置x
 	short		ay;		// 現在位置y
 	
-	short		lx;		// ロビーx
-	short		ly;		// ロビーy
-
 	short		angle;	// 体の傾き(360°)
 
-	short	obj_no;			// USER_NO / NPC_NO …
+	short		obj_no;			// USER_NO / NPC_NO …
 	unsigned short proc_flg;			// proc flg
 	unsigned short	frame_count;	// Frame
 	unsigned short	turn_count;	// Turn
-	
-	TCHARA_SCR_INFO* scrinfo;
 
+	TCHARA_SCR_INFO* scrinfo;
+	
 	unsigned long	extdata1;
 	unsigned long	extdata2;
 	DWORD	option[OBJ_OPTION_COUNT];
 	
-	wchar_t	 name[MAX_USER_NAME];	// オブジェクト名
+	wchar_t	name[MAX_USER_NAME];	// オブジェクト名
 	unsigned char		name_len;							// 
 
+	short		lx;		// ロビーx
+	short		ly;		// ロビーy
+	
 	int			sock;				// 生成されたソケット番号
 	int	    addr;				// クライアントアドレス
 	int	    sessionkey;	// チャットサーバーでは不使用 - サーバー移動時の秘密キー
 	int 		clientver;		// ゲームバージョン
 	int		port;				// ポート番号（チャットサーバーでは不使用）
 
+	unsigned short	cost;
+	
 	// 部屋情報
 	unsigned long		items[GAME_ITEM_STOCK_MAX_COUNT];	// アイテム番号
 	E_TYPE_USER_DIRECTION	dir;			// 向き
@@ -199,34 +201,38 @@ typedef struct connection_info
 } type_session;
 
 
-typedef struct connection_info
+typedef struct
 {
 	E_TYPE_OBJ_STATE	obj_state;		// 状態
 	unsigned char		obj_type;							// PC / BLT / ITEM
-
+	
 	short		vx;		// 移動方向x座標
 	short		vy;		// 移動方向y座標
 
 	short		ax;		// 現在位置x
 	short		ay;		// 現在位置y
-
+	
 	short		angle;	// 体の傾き(360°)
 
 	short		obj_no;			// USER_NO / NPC_NO …
 	unsigned short proc_flg;			// proc flg
 	unsigned short	frame_count;	// Frame
 	unsigned short	turn_count;	// Turn
+
 	TCHARA_SCR_INFO* scrinfo;
+	
 	unsigned long	extdata1;
 	unsigned long	extdata2;
 	DWORD	option[OBJ_OPTION_COUNT];
 	
-	unsigned char proc_type;		// 0：スクリプト/　1：スクリプト使用しない
-	unsigned char hit_range;			// 当たり判定の半径
-	short chr_obj_no;
-	unsigned char chara_type;
-	unsigned char bullet_type;
-	
+	BYTE proc_type;		// 0：スクリプト/　1：スクリプト使用しない
+	BYTE hit_range;			// 当たり判定の半径
+	short chr_obj_no;		// 弾を撃ったキャラ番号(ステージの場合 STAGE_OBJ_NO )
+	BYTE chara_type;		// 弾を撃ったキャラスクリプト番号
+
+	BYTE bullet_type;		// スクリプト上の弾番号
+	BYTE tex_index;
+
 	short bx;				// 移動の緩和
 	short by;				// 移動の緩和
 

@@ -13,10 +13,10 @@
 #pragma comment(lib, "wsock32.lib")
 #pragma comment(lib, "zlib.lib")
 
-#define SRV_VER		L"v2016_12_31"
-#define SRV_VER_Y	2016
-#define SRV_VER_M	12
-#define SRV_VER_D	31
+#define SRV_VER		L"v2018_07_07"
+#define SRV_VER_Y	2018
+#define SRV_VER_M	7
+#define SRV_VER_D	7
 #if TRIAL
 #define SRV_VER_T 'T'
 #define NAME_CAPTION	L"“Œ•û—¬¯ŒQ ‘ÌŒ±”Å(server)"
@@ -36,6 +36,7 @@ CTextFile*		g_pLogFile=NULL;
 int			g_nTcpPort = MY_TCP_PORT;
 BYTE		g_bytIniRuleFlg = GAME_RULE_DEFAULT;
 int		g_nActTimeLimit = GAME_TURN_ACT_COUNT;
+int	g_nMaxCost = GAME_ITEM_COST_MAX;
 
 CCriticalSection*	g_pCriticalSection = NULL;
 CFiler* g_pFiler = NULL;
@@ -202,7 +203,6 @@ void ReadIni()
 	g_bOneClient = pIniFile->ReadBool(L"CONFIG", L"ONE_CLIENT", FALSE);
 	g_nMaxLoginNum = min(MAXLOGINUSER, max(MAXUSERNUM, pIniFile->ReadInt(L"CONFIG", L"MAX_LOGIN", MAXLOGINNUM)));
 	g_nMaxSendPacketOneLoop = g_nMaxLoginNum*8;
-
 #if ONE_CLIIENT
 	g_bOneClient = TRUE;
 #endif
@@ -222,6 +222,7 @@ void ReadIni()
 #else
 	g_bLogFile = FALSE; // pIniFile->ReadBool(L"CONFIG", L"DEBUG", FALSE);
 #endif
+	g_nMaxCost = min(1000, max(0, pIniFile->ReadInt(L"RULE", L"COST", DEFAULT_GAME_ITEM_COST_MAX)));
 
 	SafeDelete(pIniFile);
 }

@@ -48,6 +48,7 @@ extern BOOL	g_bOneClient;
 extern int	g_nTcpPort;
 extern BYTE g_bytIniRuleFlg;
 extern int	g_nActTimeLimit;
+extern int	g_nMaxCost;
 /* =================================== */
 /* =====  外部参照グローバル関数 ===== */
 /* =================================== */

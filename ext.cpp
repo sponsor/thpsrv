@@ -125,7 +125,7 @@ void UpdateHPStatus(ptype_session sess, int hp)
 			dResult = dResult - 0.5;
 		else if (dResult > 0)
 			dResult = dResult + 0.5;
-		hp = dResult;
+		hp = (int)dResult;
 	}
 
 	sess->HP_c = max(0, min(sess->HP_m, sess->HP_c+hp));
