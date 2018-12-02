@@ -422,9 +422,10 @@ end
 
 -- キャラ描画イベント
 function BaseChara:OnDrawChara(chr_no,state,angle,vx,vy,frame)
+	animationTime = FPS / 30 * 5
 	if state==DEF_STATE_ACTIVE or state==DEF_STATE_WAIT then	-- アクティブ状態
-		if (frame % 5) == 0 then				-- 5frameごとに切り替え
-			tex_idx = (frame / 5) % self.tex_chr_num	-- 何番目のテクスチャを表示させるか計算
+		if (frame % animationTime) == 0 then				-- 切り替え
+			tex_idx = (frame / animationTime) % self.tex_chr_num	-- 何番目のテクスチャを表示させるか計算
 			tex_left = self.tex_chr_x					-- 初期位置を保持
 			if angle <= 90 or angle >= 270 then			-- 左を向いている場合
 				tex_idx = tex_idx + self.tex_chr_num	-- テクスチャ数分インデックスをずらす
@@ -434,8 +435,8 @@ function BaseChara:OnDrawChara(chr_no,state,angle,vx,vy,frame)
 			C_SetCharaTexture(chr_no,tex_left+1,self.tex_chr_y+1,tex_left+self.tex_chr_w-1,self.tex_chr_y+self.tex_chr_h-1)
 		end
 	elseif state==DEF_STATE_TRIGGER_BULLET or state==DEF_STATE_TRIGGER_SPELL then
-		if (frame % 5) == 0 then				-- 5frameごとに切り替え
-			tex_idx = (frame / 5)
+		if (frame % animationTime) == 0 then				-- 切り替え
+			tex_idx = (frame / animationTime)
 			if tex_idx >= self.tex_trg_num then		-- インデックス値の修正
 				tex_idx = self.tex_trg_num -1
 			end

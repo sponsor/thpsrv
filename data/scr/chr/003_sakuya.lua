@@ -252,7 +252,7 @@ function Chara.new()
 			return true
 		end,
 		OnFrame = function(self,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
-			if ex2 == 0 and frame == (FPS/2) then
+			if ex2 == 0 and frame == (FPSO/2) then
 				C_UpdateBulletVector(blt_no,0,0,0,0)
 				C_UpdateObjectType(blt_no,OBJ_TYPE_STAGE)
 				C_UpdateBulletState(blt_no,DEF_STATE_WAIT)

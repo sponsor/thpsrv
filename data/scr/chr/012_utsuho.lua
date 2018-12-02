@@ -119,7 +119,7 @@ function Chara.new()
 			end
 		end,
 		OnFrame = function(self,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
-			if ex1==1 and frame == FPS*2 then
+			if ex1==1 and frame == FPSO*2 then
 				C_RemoveBullet(blt_no,0)
 			end
 		end,
@@ -168,7 +168,7 @@ function Chara.new()
 		end,
 		Shot = function(self,chr_obj_no,chr_id,blt_type,px,py,vx,vy,vec_angle,power,frame)
 			C_PlaySoundSE(self.se[1],0,0)
-			ex = (1.0-(power*0.9)/DEF_MAX_SHOT_POWER)*FPS
+			ex = (1.0-(power*0.9)/DEF_MAX_SHOT_POWER)*FPSO
 			blt_no = C_CreateBullet(BLT_PROC_TYPE_SCR_CHARA,chr_obj_no,chr_id,blt_type,OBJ_TYPE_SOLID,px,py,vx,vy,self.add_vec_x,self.add_vec_y,self.hit_range,ex,0)
 			return true
 		end,
@@ -247,7 +247,7 @@ function Chara.new()
 			return 0
 		end,
 		OnFrame = function(self,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
-			if frame == FPS*2 then
+			if frame == FPSO*2 then
 				C_RemoveBullet(blt_no,0)
 			end
 		end,
@@ -298,7 +298,7 @@ function Chara.new()
 				C_SetEffectAnimation(effect_no,3,8,false)
 			end
 			b = C_GetBulletInfo(blt_no)
-			if b.frame_count >= FPS*3.2 then
+			if b.frame_count >= FPSO*3.2 then
 				for i=0,30 do
 					effect_no = C_AddEffect(self.id,96,32,128,64,bx,by-16,25)
 					if effect_no ~= -1 then
@@ -316,8 +316,8 @@ function Chara.new()
 			b = C_GetBulletInfo(blt_no)
 			if b ~= nil then
 				atkpw = self.atk
-				if b.frame_count < FPS*2.8 then
-					atkpw = (b.frame_count/(FPS*2.8)) * atkpw
+				if b.frame_count < FPSO*2.8 then
+					atkpw = (b.frame_count/(FPSO*2.8)) * atkpw
 				end
 				C_DamageCharaHP(blt_chr_no,hit_chr_no,math.ceil(-atkpw*power))
 			end
@@ -393,7 +393,7 @@ function Chara.new()
 					evx = math.cos(math.rad(i*45))
 					evy = math.sin(math.rad(i*45))
 					C_CreateBullet(BLT_PROC_TYPE_SCR_CHARA,b.chr_obj_no,self.id,3,OBJ_TYPE_STAGE,px+evx*5,py+evy*5,evx*250,evy*250,0,0,blt3.hit_range,0,0)
-					effect_no = C_AddEffect(self.id,0,256,96,352,px+evx*5,py+evy*5,FPS*2)
+					effect_no = C_AddEffect(self.id,0,256,96,352,px+evx*5,py+evy*5,FPSO*2)
 					if effect_no ~= -1 then
 						C_SetEffectFade(effect_no,-3)
 						C_SetEffectVector(effect_no,evx*2.5,evy*2.5,0,0)
@@ -419,7 +419,7 @@ function Chara.new()
 				elseif frame == 31 then
 					C_RemoveBullet(blt_no,0)
 				end
-			elseif ex1 == 0 and frame == (FPS*2) then
+			elseif ex1 == 0 and frame == (FPSO*2) then
 				C_UpdateBulletVector(blt_no,0,0,0,0)
 				C_UpdateObjectType(blt_no,OBJ_TYPE_STAGE)
 				C_UpdateBulletState(blt_no,DEF_STATE_WAIT)

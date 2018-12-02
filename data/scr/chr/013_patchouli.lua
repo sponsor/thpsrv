@@ -190,7 +190,7 @@ function Chara.new()
 			end
 		end,
 		OnFrame = function(self,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
-			if frame == (FPS/2) then
+			if frame == (FPSO/2) then
 				C_UpdateBulletVector(blt_no,0,0,0,0)
 				C_UpdateObjectType(blt_no,OBJ_TYPE_STAGE)
 				C_UpdateBulletState(blt_no,DEF_STATE_WAIT)
@@ -269,7 +269,7 @@ function Chara.new()
 		Shot = function(self,chr_obj_no,chr_id,blt_type,px,py,vx,vy,vec_angle,power,frame)
 			C_PlaySoundSE(self.se[1],0,0)
 			pw = (power/DEF_MAX_SHOT_POWER)
-			ex = math.ceil(pw * FPS) + 15
+			ex = math.ceil(pw * FPSO) + 15
 			C_CreateBullet(BLT_PROC_TYPE_SCR_CHARA,chr_obj_no,chr_id,blt_type,1,px,py,vx,vy,0,self.add_vec_y,self.hit_range,ex,pw*100)
 			return true
 		end,

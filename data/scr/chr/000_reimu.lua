@@ -41,9 +41,7 @@ function Chara.new()
 				end
 			end
 		end,
-		Shot = function(self,chr_obj_no,chr_id,blt_type,px,py,vx,vy,vec_angle,power,frame,indicator_angle,indicator_power)
-		C_DbgOutputNum(indicator_angle)
-		C_DbgOutputNum(indicator_power)
+		Shot = function(self,chr_obj_no,chr_id,blt_type,px,py,vx,vy,vec_angle,power,frame)
 			C_CreateBullet(BLT_PROC_TYPE_SCR_CHARA,chr_obj_no,chr_id,blt_type,1,px,py,vx,vy,self.add_vec_x,self.add_vec_y,self.hit_range,1,1)
 			C_PlaySoundSE(self.se[1],0,0)
 			return true
@@ -144,7 +142,7 @@ function Chara.new()
 			return true
 		end,
 		OnFrame = function(self,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
-			if frame == (FPS/2) then
+			if frame == (FPSO/2) then
 				C_UpdateBulletVector(blt_no,0,0,0,0)
 				C_UpdateObjectType(blt_no,OBJ_TYPE_STAGE)
 				C_UpdateBulletState(blt_no,DEF_STATE_WAIT)

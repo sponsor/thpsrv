@@ -13,10 +13,10 @@
 #pragma comment(lib, "wsock32.lib")
 #pragma comment(lib, "zlib.lib")
 
-#define SRV_VER		L"v2018_07_07"
+#define SRV_VER		L"v2018_12_08"
 #define SRV_VER_Y	2018
-#define SRV_VER_M	7
-#define SRV_VER_D	7
+#define SRV_VER_M	12
+#define SRV_VER_D	8
 #if TRIAL
 #define SRV_VER_T 'T'
 #define NAME_CAPTION	L"“Œ•û—¬¯ŒQ ‘ÌŒ±”Å(server)"

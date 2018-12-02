@@ -253,7 +253,7 @@ function Chara.new()
 		se = {	"data/scr/chr/010_fran/fran_s01.wav",
 				"data/se/sgi_Stealth.wav"},
 		OnFrame = function(self,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
-			if frame == ex2*(FPS*1.5) then	-- íœ‚·‚é‡”Ô
+			if frame == ex2*(FPSO*1.5) then	-- íœ‚·‚é‡”Ô
 				C_UpdateBulletState(blt_no,DEF_STATE_WAIT)
 			end
 		end,
@@ -286,7 +286,7 @@ function Chara.new()
 		end,
 		OnDraw = function(self,scr_id,blt_type,blt_no,state,px,py,vx,vy,vec_angle,frame,ex1,ex2)
 			if frame==1 then
-				effect_no = C_AddEffect(scr_id,0,370,96,466,px,py,ex2*FPS*1.5)
+				effect_no = C_AddEffect(scr_id,0,370,96,466,px,py,ex2*FPSO*1.5)
 				if effect_no ~= -1 then
 					C_SetEffectRotation(effect_no,5)
 				end

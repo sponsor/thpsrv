@@ -169,9 +169,7 @@ function Chara.new()
 		tex_w = 32,
 		tex_h = 32,
 		se = {	"data/scr/chr/001_marisa/marisa_s00.wav"},--,
-		Spell = function(self,chr_obj_no,chr_id,px,py,vx,vy,vec_angle,power,frame,indicator_angle,indicator_power)
-		C_DbgOutputNum(indicator_angle)
-		C_DbgOutputNum(indicator_power)
+		Spell = function(self,chr_obj_no,chr_id,px,py,vx,vy,vec_angle,power,frame)
 			wind = C_GetWindValue()
 			blt_no = C_CreateBullet(BLT_PROC_TYPE_SCR_SPELL,chr_obj_no,chr_id,DEF_BLT_TYPE_SPELL,OBJ_TYPE_SOLID,px,py,vx,vy,-wind,0,self.hit_range,wind,0)
 			C_PlaySoundSE(self.se[1],0,0)

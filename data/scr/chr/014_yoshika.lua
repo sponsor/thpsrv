@@ -145,9 +145,9 @@ function Chara.new()
 			return false
 		end,
 		OnFrame = function(self,blt_type,blt_no,frame,px,py,vx,vy,ex1,ex2)
-			if ex1==0 and frame > FPS then
+			if ex1==0 and frame > FPSO then
 				C_UpdateBulletState(blt_no,DEF_STATE_WAIT)
-			elseif ex1==2 and ((frame+1)%FPS) == 0 then
+			elseif ex1==2 and ((frame+1)%FPSO) == 0 then
 				blt = C_GetBulletInfo(blt_no)
 				chr = C_GetCharacterFromObjNo(blt.chr_obj_no)
 				ang = C_GetAngle(chr.ax-blt.ax,chr.ay-blt.ay)

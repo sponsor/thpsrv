@@ -1,13 +1,10 @@
 $#include "..\ext.h"
 
+#define MAX_SHOT_INDICATOR			(320)
+
 #define CHARA_FACE_FINE				(0)
 #define CHARA_FACE_NORMAL			(1)
 #define CHARA_FACE_HURT				(2)
-
-#define STAGE_OBJ_NO									(0xFFFF)
-#define DEF_STAGE_OBJ_NO								(0xFFFF)	
-#define DEF_STAGE_ID									(0xFF)
-#define DEF_SYSTEM_ID								(0xFE)
 
 
 #define BLT_PROC_TYPE_SCR_CHARA			(0)
@@ -26,6 +23,11 @@ $#include "..\ext.h"
 #define DEF_BLT_TRG_TYPE_EXCHANGE			(DEF_BLT_TRG_TYPE_FETCH+1)
 #define DEF_BLT_TRG_TYPE_NOANGLE				(DEF_BLT_TRG_TYPE_EXCHANGE+1)
 #define DEF_BLT_TRG_TYPE_NOMOVE				(DEF_BLT_TRG_TYPE_NOANGLE+1)
+
+#define STAGE_OBJ_NO									(0xFFFF)
+#define DEF_STAGE_OBJ_NO								(0xFFFF)
+#define DEF_STAGE_ID									(0xFF)
+#define DEF_SYSTEM_ID								(0xFE)
 
 #define OBJ_TYPE_BLT					(0x80)
 
@@ -67,7 +69,8 @@ $#include "..\ext.h"
 #define OBJ_STATE_RESULT							(0x80000000)
 
 #define DEF_MAX_SHOT_POWER					(200*10)
-#define FPS													30
+#define FPS										60
+#define FPSO									30
 #define MAX_WIND_VALUE							10
 #define MIN_WIND_VALUE							-10
 
@@ -127,7 +130,7 @@ enum E_TYPE_OBJ_STATE {
 
 	OBJ_STATE_LOADING							=	(OBJ_STATE_LOAD|0),
 	OBJ_STATE_LOADCOMPLETE					=	(OBJ_STATE_LOAD|1),
-
+	
 	OBJ_STATE_MAIN_PAUSE						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_PAUSE_FLG),
 	OBJ_STATE_MAIN_WAIT						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_WAIT_FLG),
 	OBJ_STATE_MAIN_ACTIVE						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_ACTIVE_FLG),
@@ -135,9 +138,10 @@ enum E_TYPE_OBJ_STATE {
 	OBJ_STATE_MAIN_DROP						= (OBJ_STATE_GAME|OBJ_STATE_MAIN_DROP_FLG),
 
 	OBJ_STATE_MAIN_GALLERY					= (OBJ_STATE_GAME|OBJ_STATE_MAIN_GALLERY_FLG),
-	
+
 	OBJ_STATE_RESULT_CONFIRMING			= (OBJ_STATE_RESULT|0),
 	OBJ_STATE_RESULT_CONFIRMED				= (OBJ_STATE_RESULT|1),
+
 };
 
 typedef struct connection_info
@@ -154,6 +158,7 @@ typedef struct connection_info
 	short		angle;	// 体の傾き(360°)
 
 	short		obj_no;			// USER_NO / NPC_NO …
+	unsigned char		sess_index;		// USER_INDEX / NPC_INDEX ...
 	unsigned short proc_flg;			// proc flg
 	unsigned short	frame_count;	// Frame
 	unsigned short	turn_count;	// Turn
@@ -162,7 +167,7 @@ typedef struct connection_info
 	
 	unsigned long	extdata1;
 	unsigned long	extdata2;
-	DWORD	option[OBJ_OPTION_COUNT];
+	unsigned long	option[OBJ_OPTION_COUNT];
 	
 	wchar_t	name[MAX_USER_NAME];	// オブジェクト名
 	unsigned char		name_len;							// 
@@ -200,7 +205,6 @@ typedef struct connection_info
 
 } type_session;
 
-
 typedef struct
 {
 	E_TYPE_OBJ_STATE	obj_state;		// 状態
@@ -215,6 +219,7 @@ typedef struct
 	short		angle;	// 体の傾き(360°)
 
 	short		obj_no;			// USER_NO / NPC_NO …
+	unsigned char		sess_index;		// USER_INDEX / NPC_INDEX ...
 	unsigned short proc_flg;			// proc flg
 	unsigned short	frame_count;	// Frame
 	unsigned short	turn_count;	// Turn
@@ -223,15 +228,15 @@ typedef struct
 	
 	unsigned long	extdata1;
 	unsigned long	extdata2;
-	DWORD	option[OBJ_OPTION_COUNT];
+	unsigned long	option[OBJ_OPTION_COUNT];
 	
-	BYTE proc_type;		// 0：スクリプト/　1：スクリプト使用しない
-	BYTE hit_range;			// 当たり判定の半径
+	unsigned char proc_type;		// 0：スクリプト/　1：スクリプト使用しない
+	unsigned char hit_range;			// 当たり判定の半径
 	short chr_obj_no;		// 弾を撃ったキャラ番号(ステージの場合 STAGE_OBJ_NO )
-	BYTE chara_type;		// 弾を撃ったキャラスクリプト番号
+	unsigned char chara_type;		// 弾を撃ったキャラスクリプト番号
 
-	BYTE bullet_type;		// スクリプト上の弾番号
-	BYTE tex_index;
+	unsigned char bullet_type;		// スクリプト上の弾番号
+	unsigned char tex_index;
 
 	short bx;				// 移動の緩和
 	short by;				// 移動の緩和
@@ -246,11 +251,10 @@ typedef struct ground_info{
 	bool ground;
 } type_ground;
 
-
 extern int C_CreateBullet(double proc_type, double chr_obj_no, double chara_type, double blt_type, double obj_type, double posx, double posy, double vecx, double vecy, double addx, double addy, double hit_range, double extdata1, double extdata2);
-extern bool C_Shot(int chr_obj_no, int proc_type, int chr_id, int blt_type, int vec_angle, int power, int frame, int indicator_angle = 0, int indicator_short = 0);
+extern bool C_Shot(int chr_obj_no, int proc_type, int chr_id, int blt_type, int vec_angle, int power, int frame, int indicator_angle = 0, int indicator_power = 0);
 extern bool C_RemoveBullet(double obj_no, int rm_type);
-extern bool C_IsRemovedObject(int obj_no);
+extern bool C_IsRemovedObject(double obj_no);
 extern bool C_BombObject(int scr_id, int blt_type, int blt_chr_no, int blt_no, int pos_x, int pos_y,int erase=1);
 extern bool C_DamageCharaHP(int assailant_no, int victim_no, int hp);
 extern bool C_UpdateCharaStatus(int obj_no, int hp, int mv, int delay, int exp);
@@ -267,29 +271,30 @@ extern unsigned int C_GetCharaExtData1(int obj_no);
 extern unsigned int C_GetCharaExtData2(int obj_no);
 extern bool C_SetCharaExtData1(int obj_no, unsigned long extdata1);
 extern bool C_SetCharaExtData2(int obj_no, unsigned long extdata2);
-extern bool C_AddCharaItem(int obj_no, int item);
+extern bool C_AddCharaItem(int obj_no, int item_flg);
 extern bool C_SetCharaState(int obj_no, int chr_stt, int val);
 extern int C_GetCharaState(int obj_no, int chr_stt);
 extern unsigned long C_GetCharaItem(int obj_no, int item_index);
+
 extern bool C_UpdateBulletState(double obj_no, double state);
+
 extern bool C_UpdateBulletPosition(double obj_no, double px, double py, double vx, double vy, double adx, double ady);
 extern bool C_UpdateBulletVector(double obj_no, double vx, double vy, double adx, double ady);
-
+extern bool C_UpdateObjectType(int obj_no, int type);
 extern void C_PasteTextureOnStage(int scr_id, int sx,int sy, int tx,int ty,int tw,int th);
 extern int C_GetRand(int min, int max);
 extern int C_GetEntityCharacters();
 extern int C_GetLivingCharacters();
+extern int C_GetWindValue();
+extern void C_SetWindValue(int wind, int dir);
+extern int C_GetStageWidth();
+extern int C_GetStageHeight();
 extern type_session C_GetCharacterAtVector(int index);
 extern type_session C_GetCharacterFromObjNo(int obj_no);
 extern type_blt C_GetBulletInfo(int obj_no);
 extern int C_GetBulletAtkValue(int blt_no);
 extern unsigned int C_GetBulletExtData1(int obj_no);
 extern unsigned int C_GetBulletExtData2(int obj_no);
-extern int C_GetWindValue();
-extern void C_SetWindValue(int wind, int dir);
-extern int C_GetStageWidth();
-extern int C_GetStageHeight();
-extern bool C_UpdateObjectType(int obj_no, int type);
 
 extern bool C_UpdateBulletAngle(double blt_no, double angle);
 extern bool C_SetBulletTextureIndex(double blt_no, double index);
@@ -297,7 +302,7 @@ extern bool C_SetCharaTexture(int chr_no, int left, int top, int right, int bott
 
 extern int C_AddEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age);
 extern bool C_RemoveEffect(double effect_no);
-extern bool C_SetEffectVector(double effect_no, double vx, double vy, double ax, double ay);
+extern bool C_SetEffectVector(double effect_no, double vx, double vy, double ax, double ay, double effect_time=0);
 extern bool C_SetEffectAlpha(double effect_no, double alpha);
 extern bool C_SetEffectFade(double effect_no, double fade, double effect_time=0);
 extern bool C_SetEffectFadeInOut(double effect_no, double fadeinout);
@@ -308,9 +313,10 @@ extern bool C_SetEffectScalling(double effect_no, double scalex, double scaley, 
 extern bool C_SetEffectAnimation(double effect_no, double atime, double acount, bool loop, double effect_time=0);
 extern bool C_SetEffectTexture(int effect_no, double left, double top, double right, double bottom);
 
+
 extern int C_AddBGEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age);
 extern bool C_RemoveBGEffect(double effect_no);
-extern bool C_SetBGEffectVector(double effect_no, double vx, double vy, double ax, double ay);
+extern bool C_SetBGEffectVector(double effect_no, double vx, double vy, double ax, double ay, double effect_time=0);
 extern bool C_SetBGEffectAlpha(double effect_no, double alpha);
 extern bool C_SetBGEffectFade(double effect_no, double fade, double effect_time=0);
 extern bool C_SetBGEffectFadeInOut(double effect_no, double fadeinout);

@@ -138,7 +138,7 @@ function Chara.new()
 			end
 		end,
 		Shot = function(self,chr_obj_no,chr_id,blt_type,px,py,vx,vy,vec_angle,power,frame)
-			HFPS = FPS/2
+			HFPS = FPSO/2
 			C_CreateBullet(BLT_PROC_TYPE_SCR_CHARA,chr_obj_no,chr_id,blt_type,1,px,py,vx,vy,self.add_vec_x,self.add_vec_y,self.hit_range,((power/DEF_MAX_SHOT_POWER)*HFPS*0.5)+(HFPS*0.8),1)
 			C_PlaySoundSE(self.se[1],0,0)
 			return true

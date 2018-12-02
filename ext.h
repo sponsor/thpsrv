@@ -82,7 +82,7 @@ unsigned long genrand_int32(void);
 extern int C_CreateBullet(double proc_type, double chr_obj_no, double chara_type, double blt_type, double obj_type, double posx, double posy, double vecx, double vecy, double addx, double addy, double hit_range, double extdata1, double extdata2);
 extern bool C_Shot(int chr_obj_no, int proc_type, int chr_id, int blt_type, int vec_angle, int power, int frame, int indicator_angle = 0, int indicator_short = 0);
 extern bool C_RemoveBullet(double obj_no, int rm_type);
-extern bool C_IsRemovedObject(int obj_no);
+extern bool C_IsRemovedObject(double obj_no);
 extern bool C_BombObject(int scr_id, int blt_type, int blt_chr_no, int blt_no, int pos_x, int pos_y,int erase=1);
 extern bool C_DamageCharaHP(int assailant_no, int victim_no, int hp);
 extern bool C_UpdateCharaStatus(int obj_no, int hp, int mv, int delay, int exp);
@@ -99,7 +99,7 @@ extern unsigned int C_GetCharaExtData1(int obj_no);
 extern unsigned int C_GetCharaExtData2(int obj_no);
 extern bool C_SetCharaExtData1(int obj_no, unsigned long extdata1);
 extern bool C_SetCharaExtData2(int obj_no, unsigned long extdata2);
-extern bool C_AddCharaItem(int obj_no, int item);
+extern bool C_AddCharaItem(int obj_no, int item_flg);
 extern bool C_SetCharaState(int obj_no, int chr_stt, int val);
 extern int C_GetCharaState(int obj_no, int chr_stt);
 extern unsigned long C_GetCharaItem(int obj_no, int item_index);
@@ -128,7 +128,7 @@ extern bool C_SetCharaTexture(int chr_no, int left, int top, int right, int bott
 
 extern int C_AddEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age);
 extern bool C_RemoveEffect(double effect_no);
-extern bool C_SetEffectVector(double effect_no, double vx, double vy, double ax, double ay);
+extern bool C_SetEffectVector(double effect_no, double vx, double vy, double ax, double ay, double effect_time=0);
 extern bool C_SetEffectAlpha(double effect_no, double alpha);
 extern bool C_SetEffectFade(double effect_no, double fade, double effect_time=0);
 extern bool C_SetEffectFadeInOut(double effect_no, double fadeinout);
@@ -142,7 +142,7 @@ extern bool C_SetEffectTexture(int effect_no, double left, double top, double ri
 
 extern int C_AddBGEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age);
 extern bool C_RemoveBGEffect(double effect_no);
-extern bool C_SetBGEffectVector(double effect_no, double vx, double vy, double ax, double ay);
+extern bool C_SetBGEffectVector(double effect_no, double vx, double vy, double ax, double ay, double effect_time=0);
 extern bool C_SetBGEffectAlpha(double effect_no, double alpha);
 extern bool C_SetBGEffectFade(double effect_no, double fade, double effect_time=0);
 extern bool C_SetBGEffectFadeInOut(double effect_no, double fadeinout);

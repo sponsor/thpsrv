@@ -63,7 +63,7 @@ bool C_RemoveBullet(double obj_no, int rm_type)
 	return res;
 }
 
-bool C_IsRemovedObject(int obj_no)
+bool C_IsRemovedObject(double obj_no)
 {
 	bool res = false;
 	g_pCriticalSection->EnterCriticalSection_Object(L'H');
@@ -216,10 +216,10 @@ bool C_SetCharaExtData2(int obj_no, unsigned long extdata2)
 	return res;
 }
 
-bool C_AddCharaItem(int obj_no, int item)
+bool C_AddCharaItem(int obj_no, int item_flg)
 {
 	g_pCriticalSection->EnterCriticalSection_Session(L'@');
-	bool res = g_pSyncMain->AddCharaItem(obj_no, (DWORD)(item));
+	bool res = g_pSyncMain->AddCharaItem(obj_no, (DWORD)(item_flg));
 	g_pCriticalSection->LeaveCriticalSection_Session();
 	return res;
 }
@@ -376,7 +376,7 @@ bool C_SetCharaTexture(int chr_no, int left, int top, int right, int bottom) {	r
 //> effect	サーバはスルー
 int C_AddEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age){	return -1;}
 bool C_RemoveEffect(double effect_no){	return true;	}
-bool C_SetEffectVector(double effect_no, double vx, double vy, double ax, double ay){	return true;	}
+bool C_SetEffectVector(double effect_no, double vx, double vy, double ax, double ay, double effect_time){	return true;	}
 bool C_SetEffectAlpha(double effect_no, double alpha) {	return true;	}
 bool C_SetEffectFade(double effect_no, double fade, double effect_time){	return true;	}
 bool C_SetEffectFadeInOut(double effect_no, double fadeinout){	return true; }
@@ -390,7 +390,7 @@ bool C_SetEffectTexture(int effect_no, double left, double top, double right, do
 
 int C_AddBGEffect(double chr_id, double left, double top, double right, double bottom, double x, double y, double age){	return -1;}
 bool C_RemoveBGEffect(double effect_no){	return true;	}
-bool C_SetBGEffectVector(double effect_no, double vx, double vy, double ax, double ay){	return true;	}
+bool C_SetBGEffectVector(double effect_no, double vx, double vy, double ax, double ay, double effect_time){	return true;	}
 bool C_SetBGEffectAlpha(double effect_no, double alpha) {	return true;	}
 bool C_SetBGEffectFade(double effect_no, double fade, double effect_time){	return true;	}
 bool C_SetBGEffectFadeInOut(double effect_no, double fadeinout){	return true; }
